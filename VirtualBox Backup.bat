@@ -129,8 +129,13 @@ CLS
 
 		ECHO:
 		CALL :DebugLog "%_VM_NAME%"
-
-		SET "_VMBACKUPNAME=%_PREFIX%%_DATE%-%_TIME%%_SUFFIX%"
+		
+		SET "_VMBACKUPNAME=%_PREFIX%%_VM_NAME%-%_DATE%-%_TIME%%_SUFFIX%"
+		SET "_VMBACKUPDIR=%_BACKUPDIR%\%_VM_NAME%"
+		SET "_VMBACKUPDIRTMP=%_VMBACKUPDIR%\Temp"
+		SET "_VMBACKUPPATH=%_VMBACKUPDIR%\%_VMBACKUPNAME%"
+		SET "_VMBACKUPPATHTMP=%_VMBACKUPDIR%\Temp\%_VMBACKUPNAME%"
+		
 
 	:VM_Include
 	:: Check if the VM is explicitly included and skip everything else
@@ -169,7 +174,7 @@ CLS
 
 	:VM_Create_Snapshot
 	:: Create a snapshot
-		CALL :DebugLog "Creating Snapshot..."
+		CALL :DebugLog "Creating Backup Snapshot..."
 		"%_VBOXMANAGE%" ^
 			snapshot %_VM_UUID% ^
 			take "%_VMBACKUPNAME%" ^
@@ -191,44 +196,47 @@ CLS
 	:: Copy the VM to TEMP
 		CALL :GetVMPath
 		IF /I NOT "%_BACKUPDIR%"=="false" (
-			CALL :DebugLog "Copy..."
-			ROBOCOPY "%_VMPATH%." "%TEMP%\%_VM_UUID%" /E
+			CALL :DebugLog "Cloning..."
+			echo "%_VBOXMANAGE%" clonevm  %_VM_UUID% --snapshot="%_VMBACKUPNAME%" --name="%_VMBACKUPNAME%" --basefolder="%_VMBACKUPDIRTMP%" --options=keepallmacs,keepdisknames,keephwuuids
+			"%_VBOXMANAGE%" clonevm  %_VM_UUID% --snapshot="%_VMBACKUPNAME%" --name="%_VMBACKUPNAME%" --basefolder="%_VMBACKUPDIRTMP%" --options=keepallmacs,keepdisknames,keephwuuids
 		)
 
 	:VM_Delete_Snapshot
 	:: Delete snapshot
 		IF NOT DEFINED _STACK (
-			CALL :DebugLog "Deleting Snapshot..."
+			CALL :DebugLog "Deleting Backup Snapshot..."
 			"%_VBOXMANAGE%" ^
 				snapshot %_VM_UUID% ^
 				delete "%_VMBACKUPNAME%"
+		) ELSE (
+			CALL :DebugLog "Keeping Backup Snapshot!"
 		)
 
 	:VM_Compress
 	:: Compress
 		IF DEFINED _COMPRESSENABLED (
 			CALL :DebugLog "Compressing..."
-			"%_7z%" a -mx%_COMPRESS% -sdel "%_BACKUPDIR%\%_VM_Name%\%_VMBACKUPNAME%.7z" "%TEMP%\%_VM_UUID%\*"
+			"%_7z%" a -mx%_COMPRESS% -sdel "%_VMBACKUPPATH%.7z" "%_VMBACKUPPATHTMP%\*"
 		) ELSE (
 			IF /I NOT "%_BACKUPDIR%"=="false" (
 				CALL :DebugLog "Moving..."
-				ROBOCOPY "%TEMP%\%_VM_UUID%" "%_BACKUPDIR%\%_VM_Name%\%_VMBACKUPNAME%" /E /MOVE
+				echo move "%_VMBACKUPPATHTMP%" "%_VMBACKUPATH%"
+				move "%_VMBACKUPPATHTMP%" "%_VMBACKUPATH%"
 			)
 		)
-		REM RD /S /Q "%TEMP%\%_VM_UUID%" > nul
 
 	:VM_Cleanup
 	:: Delete old backups
 		IF %_KEEP% GTR 0 (
 			CALL :DebugLog "Cleanup..."
-			FOR /F "skip=%_KEEP% eol=: delims=" %%F IN ('DIR /T:C /B /O:-D "%_BACKUPDIR%\%_VM_Name%\%_PREFIX%*%_SUFFIX%*"') DO (
+			FOR /F "skip=%_KEEP% eol=: delims=" %%F IN ('DIR /T:C /B /O:-D "%_VMBACKUPDIR%\%_PREFIX%*%_SUFFIX%*"') DO (
 				CALL :DebugLog "Delete %%~F..."
-				FOR %%Z IN ("%_BACKUPDIR%\%_VM_Name%\%%~F") DO (
+				FOR %%Z IN ("%_VMBACKUPDIR%\%%~F") DO (
 					IF "%%~aZ" GEQ "d" (
-						RD /S /Q "%_BACKUPDIR%\%_VM_Name%\%%~F"
+						RD /S /Q "%_VMBACKUPDIR%\%%~F"
 					) ELSE (
 						IF "%%~aZ" GEQ "-" (
-							DEL "%_BACKUPDIR%\%_VM_Name%\%%~F"
+							DEL "%_VMBACKUPDIR%\%%~F"
 						)
 					)
 				)
@@ -353,7 +361,7 @@ CLS
 	CALL :DebugLog "[ --backupdir ]  { PATH }            - Sets the Backup Folder. Leave out for Snapshot Only"
 	CALL :DebugLog "[ --backupmode ] [ acpipowerbutton ] - Sets the Backup Mode. Default: snapshot"
 	CALL :DebugLog "                 [ savestate ]         "
-	CALL :DebugLog ".                [ snapshot ]          "
+	CALL :DebugLog "                 [ snapshot ]          "
 	CALL :DebugLog "[ --prefix ]     { STRING }          - Prefix your backup with a string. Default: No prefix"
 	CALL :DebugLog "[ --suffix ]     { STRING }          - Append your backup with a string. Default: No suffix"
 	CALL :DebugLog "[ --include ]    { VM-Name }         - Backup only a single VM. Default: Backup all VMs"
