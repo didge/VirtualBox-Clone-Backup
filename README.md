@@ -2,16 +2,16 @@
 # VirtualBox Clone Backup
 VirtualBox Clone Backup (VBCB) is a script for creating Oracle VirtualBox VM backups in Windows host environments with as little downtime as possible.
 
-VBCB is a fork of https://github.com/niro1987/VirtualBox-Backup (VBB),  without which this version would not have been possible.  
+VBCB is a fork of the excellent https://github.com/niro1987/VirtualBox-Backup (VBB) project, the key being the use of `clonevm` command instead of `robocopy` to create backups.
 
-The key difference between VBCB and VBB is the format uses the `clonevm` command instead of `robocopy` to create the backup.  The main advantage of using `clonevm` is that fewer files and no live data are copied.  `clonevm` is also configured to create a new UUID for the backup, which means the backup is immediately bootable without having to unregister the original VM.
+The main advantage of using `clonevm` is that fewer files and no live data are copied.  `clonevm` is also configured to create a new UUID for the backup, which means the backup is immediately bootable without having to unregister the original VM.
 
 Additional changes from VBB include:
-* Re-organization of backup directory in sub-directories by VM names.
-* Added `--backupmode start` which starts the VM immediately after snapshotting.
+* Re-organization of backup directory by sub-directory based on VM names and timestamps.
+* Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-When I want to make a backup, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to immediately begin the cloning the snapshot while the VM is restarted, minimizing downtime. 
+When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to immediately begin the cloning the snapshot while the VM is restarted, minimizing downtime. 
 
 ## Table of Contents
 - [VirtualBox Clone Backup](#virtualbox-clone-backup)
