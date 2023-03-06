@@ -1,8 +1,20 @@
-# VirtualBox Backup
 
-An automated backup for Oracle VirtualBox VMs in Windows
+# VirtualBox Clone Backup
+VirtualBox Clone Backup (VBCB) is a script for creating Oracle VirtualBox VM backups in Windows host environments with as little downtime as possible.
 
-- [VirtualBox Backup](#virtualbox-backup)
+VBCB is a fork of https://github.com/niro1987/VirtualBox-Backup (VBB),  without which this version would not have been possible.  
+
+The key difference between VBCB and VBB is the format uses the `clonevm` command instead of `robocopy` to create the backup.  The main advantage of using `clonevm` is that fewer files and no live data are copied.  `clonevm` is also configured to create a new UUID for the backup, which means the backup is immediately bootable without having to unregister the original VM.
+
+Additional changes from VBB include:
+* Re-organization of backup directory in sub-directories by VM names.
+* Added `--backupmode start` which starts the VM immediately after snapshotting.
+
+## How I Like to Use VBCB
+When I want to make a backup, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to immediately begin the cloning the snapshot while the VM is restarted, minimizing downtime. 
+
+## Table of Contents
+- [VirtualBox Clone Backup](#virtualbox-clone-backup)
   - [Installation](#installation)
   - [Usage](#usage)
     - [Backup Dir](#backup-dir)
@@ -13,8 +25,11 @@ An automated backup for Oracle VirtualBox VMs in Windows
     - [Compress](#compress)
     - [Keep](#keep)
     - [Stack](#stack)
+  - [Restoring Backups](#restoring-backups)
   - [Advanced Usage](#advanced-usage)
     - [Grandfather-Father-Son Rotation](#grandfather-father-son-rotation)
+  - [Changes](#changes)
+  - [Credits](#credits)
 
 ## Installation
 
@@ -22,7 +37,33 @@ An automated backup for Oracle VirtualBox VMs in Windows
 2. Edit and rename *(optional)* **Example Start.bat** according to your needs. See below [Usage](#Usage)
 3. Create a basic task to periodically start **Example Start.bat** *(or whatever you named it)* with [Task Scheduler](https://www.google.com/search?q=Windows+Task+Scheduler&oq=Windows+Task+Scheduler).
 
-I've tried passing the arguments directly to *VirtualBox Backup.bat* in Task Scheduler but the task didn't start correctly. Using *Example Start.bat* as the placeholder makes editing the parameters a bit more *'user friendly'* and easier to duplicate.
+Using *Example Start.bat* from Task Scheduler makes editing the parameters a bit more *'user friendly'* and easier to duplicate.
+
+## How It Works
+VBCP starts by taking a snapshot of a target vm.  The `backupmode` param lets you choose between taking live snapshots or snapshots from stopped or saved states.
+
+If `backupdir` is specified, the snapshot is also cloned to the specified directory as follows:
+
+	<backupdir>/
+	├─ <vm>/
+	│  ├─ <prefix><vm_name>-YYYY.MM.DD-HH.MM<suffix>/
+	│  │  ├─ <prefix>YYYY.MM.DD-HH.MM<suffix>.vbox
+	│  │  ├─ <prefix>YYYY.MM.DD-HH.MM<suffix>.vdi
+	│  │  ├─ Snapshots/
+
+Where `<backupdir>`, `<vm>`, `<prefix>` and `<suffix>` are specified by options.
+
+Additional features:
+1. Save or remove the backup snapshot in the target VM.
+2. Set the number of backups to keep.
+3. Compress backups.
+4. Include or exclude source VMs and backup more than one VM at a time.
+5. Stop or save VM state before taking snapshots and resume them afterward.
+6. Take live snapshots.
+7. Clone snapshots while the VM is running.
+
+## Restoring a Backup
+Since each VBCP backup is  created using `vboxmanage clonevm` with a new UUID, each backup is immediately available to be added in VirtualBox Manager by tapping `Machine > Add...`.  
 
 ## Usage
 
@@ -58,9 +99,10 @@ To restore a backup you simply copy/extract the files to your desired location, 
 
 | Parameter                      | Description                                                                                                                                                                                                                                                                              |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--backupmode acpipowerbutton` | The VM is completely shut down and boots normally after the snapshot is created. Not ideal if login is required after boot. Booting a restored backup is like normal booting the VM.                                                                                                     |
+| `--backupmode acpipowerbutton` | The VM is completely shut down and boots normally after the snapshot is created. Not ideal if login is required after boot. Booting a restored backup is like normal booting the VM. |
 | `--backupmode savestate`       | The VM's state is frozen and saved, VM resumes normally after the snapshot is created. Not all operating systems can handle this *gap* in time. Booting a restored backup is like unfreezing time, the same *gap* applies. You might need to restart your VM to fix any time gap issues. |
-| `--backupmode snapshot`        | The VM is saved in a live snapshot without any downtime. Booting a restored backup is as if the VM experienced a power failure. It the best suboptimal solution to prevent downtime.                                                                                                     |
+| `--backupmode snapshot`        | The VM is saved in a live snapshot without any downtime. Booting a restored backup is as if the VM experienced a power failure. It the best suboptimal solution to prevent downtime.|
+| `--backupmode start`        | The VM is started immediately after snapshotting.|
 
 ### Prefix/Suffix
 

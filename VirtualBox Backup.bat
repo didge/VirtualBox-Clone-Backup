@@ -135,7 +135,6 @@ CLS
 		SET "_VMBACKUPDIRTMP=%_VMBACKUPDIR%\Temp"
 		SET "_VMBACKUPPATH=%_VMBACKUPDIR%\%_VMBACKUPNAME%"
 		SET "_VMBACKUPPATHTMP=%_VMBACKUPDIR%\Temp\%_VMBACKUPNAME%"
-		
 
 	:VM_Include
 	:: Check if the VM is explicitly included and skip everything else
@@ -181,15 +180,20 @@ CLS
 			--live
 
 	:VM_Start
-	:: Start the VM (if it was running)
+	:: Start the VM (if it was running or asked to)
 		CALL :GetInfo
+		set "doStart=false"
 		IF /I NOT "%_VM_VMSTATE%"=="running" (
 			IF /I "%_VMINITSTATE%"=="running" (
-				CALL :DebugLog "Starting VM..."
-				"%_VBOXMANAGE%" ^
-					startvm %_VM_UUID% ^
-					--type headless
+				set "doStart=true"
 			)
+		)
+		IF /I "%_BACKUPMODE%"=="start" (
+			set "doStart=true"
+		)
+		IF /I "%doStart%"=="true" (
+			CALL :DebugLog "Starting VM..."
+			"%_VBOXMANAGE%" startvm %_VM_UUID%
 		)
 
 	:VM_Copy
@@ -220,8 +224,8 @@ CLS
 		) ELSE (
 			IF /I NOT "%_BACKUPDIR%"=="false" (
 				CALL :DebugLog "Moving..."
-				echo move "%_VMBACKUPPATHTMP%" "%_VMBACKUPATH%"
-				move "%_VMBACKUPPATHTMP%" "%_VMBACKUPATH%"
+				echo move "%_VMBACKUPPATHTMP%" "%_VMBACKUPPATH%"
+				move "%_VMBACKUPPATHTMP%" "%_VMBACKUPPATH%"
 			)
 		)
 
@@ -362,6 +366,7 @@ CLS
 	CALL :DebugLog "[ --backupmode ] [ acpipowerbutton ] - Sets the Backup Mode. Default: snapshot"
 	CALL :DebugLog "                 [ savestate ]         "
 	CALL :DebugLog "                 [ snapshot ]          "
+	CALL :DebugLog "                 [ start ]             "
 	CALL :DebugLog "[ --prefix ]     { STRING }          - Prefix your backup with a string. Default: No prefix"
 	CALL :DebugLog "[ --suffix ]     { STRING }          - Append your backup with a string. Default: No suffix"
 	CALL :DebugLog "[ --include ]    { VM-Name }         - Backup only a single VM. Default: Backup all VMs"
