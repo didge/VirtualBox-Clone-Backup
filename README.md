@@ -11,7 +11,7 @@ Additional changes from VBB include:
 * Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to immediately begin the cloning the snapshot while the VM is restarted, minimizing downtime. 
+When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to concurrenlty launch the Current VM while cloning the snapshot, minimizing downtime.
 
 ## Table of Contents
 - [VirtualBox Clone Backup](#virtualbox-clone-backup)
