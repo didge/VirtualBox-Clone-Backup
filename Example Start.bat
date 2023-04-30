@@ -1,7 +1,4 @@
 @ECHO OFF
-CLS
-FOR %%C IN ("%~dp0.") DO SET "_CURRENTDIR=%%~fC"
-SET "_VBBACKUP=%_CURRENTDIR%\VirtualBox Backup.bat"
 :: Please read the full documentation on https://github.com/didge/VirtualBox-Clone-Backup#usage
 ::
 :: [ --backupdir ]  { PATH }            - Sets the Backup Folder. Leave out for Snapshot Only
@@ -18,4 +15,5 @@ SET "_VBBACKUP=%_CURRENTDIR%\VirtualBox Backup.bat"
 :: [ --stack ]                          - Do not delete snapshots. Uses a lot of drive space.
 
 :: Example - Modify according to your needs
-"%_VBBACKUP%" --backupdir "%_CURRENTDIR%" --compress 0
+call PATH_TO_VBCP --backupmode start --backupdir PATH_TO_BACKUPDIR --include NAME_OF_VM
+pause >nul

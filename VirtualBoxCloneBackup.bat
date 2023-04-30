@@ -9,7 +9,7 @@ CLS
 
 	CALL :DebugLog "Starting VirtualBox Backup..."
 	FOR %%L IN ("%~dp0.") DO SET "_LOGFILE=%%~fL\log.txt"
-
+	
 	SET "_VBOXMANAGE=C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
 	SET "_7z=C:\Program Files\7-Zip\7z.exe"
 	SET "_DATE=%_DATETIME:~0,4%.%_DATETIME:~4,2%.%_DATETIME:~6,2%"
@@ -26,6 +26,16 @@ CLS
 	SET "_COMPRESSENABLED="
 	SET "_KEEP="
 	SET "_STACK="
+	
+	:: Check for Admin
+	:: vboxmanage clonevm as non-admin prevents subsequent starts of VMs with a PROC_ELEVATION_REQUIRED error even when running as admin.
+	:: VMs are not affected but VirtualBox must be repaired or re-installed to remedy the issue.
+	NET SESSION >nul 2>&1
+	IF %ERRORLEVEL% NEQ 0 (
+		CALL :DebugLog "ERROR: VirtualBoxCloneBackup.bat must be run as Administator."
+		GOTO :Terminate
+	)
+
 	
 	:ParseParameters
 	CALL :getParamFlag "/?" "_README" "%~1" && SHIFT /1 && GOTO :ParseParameters
@@ -193,6 +203,7 @@ CLS
 		)
 		IF /I "%doStart%"=="true" (
 			CALL :DebugLog "Starting VM..."
+			echo "%_VBOXMANAGE%" startvm %_VM_UUID%
 			"%_VBOXMANAGE%" startvm %_VM_UUID%
 		)
 
