@@ -90,7 +90,7 @@ Leaving the `backupdir` parameter out will create a snapshot of the VM without c
 ### Backup Mode
 
 ```text
-[ --backupmode ]  [ acpipowerbutton | savestate | snapshot ]
+[ --backupmode ]  [ acpipowerbutton | savestate | snapshot | start ]
 ```
 
 In order to succesfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
@@ -102,7 +102,7 @@ To restore a backup you simply copy/extract the files to your desired location, 
 | `--backupmode acpipowerbutton` | The VM is completely shut down and boots normally after the snapshot is created. Not ideal if login is required after boot. Booting a restored backup is like normal booting the VM. |
 | `--backupmode savestate`       | The VM's state is frozen and saved, VM resumes normally after the snapshot is created. Not all operating systems can handle this *gap* in time. Booting a restored backup is like unfreezing time, the same *gap* applies. You might need to restart your VM to fix any time gap issues. |
 | `--backupmode snapshot`        | The VM is saved in a live snapshot without any downtime. Booting a restored backup is as if the VM experienced a power failure. It the best suboptimal solution to prevent downtime.|
-| `--backupmode start`        | The VM is started immediately after snapshotting.|
+| `--backupmode start`           | The VM is started immediately after snapshotting.|
 
 ### Prefix/Suffix
 
