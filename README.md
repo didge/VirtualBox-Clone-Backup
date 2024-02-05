@@ -197,6 +197,8 @@ By the end of June 2020 it would look like this.
 | Father      | -   | -   | -   | X   | X    | X    | -    | X    | -    |
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
 
+## Compatibility
+Should work with VB 6.1.0 and VB 7.0.
 ## Change Log
 | Date | Changes
 |------------|----------------------------------------------------------------
@@ -208,5 +210,5 @@ By the end of June 2020 it would look like this.
 [niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTkyNDQ1MjY2MCwtNzc3OTg2NzQ5XX0=
+eyJoaXN0b3J5IjpbMTA1NTAxODUwMSwtNzc3OTg2NzQ5XX0=
 -->
