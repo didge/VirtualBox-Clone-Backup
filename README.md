@@ -11,11 +11,11 @@ Additional changes from VBB include:
 * Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-VBB was great, but one of the issues that I have with it is that in order to ensure a stable backup of a live VM, the VM had to be taken offline for the duration of the backup.
+VBB is great, but one of the issues that I have with it is that in order to ensure a stable backup of a live VM, the VM had to be taken offline for the duration of the backup.
 
 When I make a backup of a live VM, I first shutdown it down then execute a script that launches VBCB with the `--backupmode start` option.  With this option enabled, VBCB does the following:
 1. Takes a snapshot of the VM.
-1. Makes a clone of the VM from the snapshot.
+1. Starts a clone of the VM from the snapshot.
 1. While the clone is starting, simultaneously restarts the VM.
 Because the snapshot is taken while the VM is offline, it is both fast and stable.  And, because the clone is made from a snapshot, there is nothing preventing the VM from restarting immediately.  Backups of a live VM take only as long to shutdown and restart.  
 
@@ -217,5 +217,5 @@ Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40
 [niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEwNzU4OTA3MSwtNzc3OTg2NzQ5XX0=
+eyJoaXN0b3J5IjpbLTE0MzkyNjI5OTgsLTc3Nzk4Njc0OV19
 -->
