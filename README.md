@@ -196,6 +196,7 @@ By the end of June 2020 it would look like this.
 | Son         | -   | -   | -   | -   | -    | -    | X    | -    | X    |
 | Father      | -   | -   | -   | X   | X    | X    | -    | X    | -    |
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
+
 ## Change Log
 | Date | Changes
 |------------|----------------------------------------------------------------
@@ -203,9 +204,9 @@ By the end of June 2020 it would look like this.
 | 2024-02-04 | Update and clean up with support for VB 7.0.14.
 
 ## Credits
-The [VirtualBox.org](https://virtualbox.org) team.
-[niro1987](https://github.com/niro1987)
+[VirtualBox.org](https://virtualbox.org) team for obvious reasons.
+[niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODk3MzQ4Mjk5LC03Nzc5ODY3NDldfQ==
+eyJoaXN0b3J5IjpbMTkyNDQ1MjY2MCwtNzc3OTg2NzQ5XX0=
 -->
