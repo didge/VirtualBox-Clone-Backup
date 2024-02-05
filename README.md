@@ -11,7 +11,9 @@ Additional changes from VBB include:
 * Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-For decades, I've worked with physical PCs with ad hoc systems for backup.  I've been very lucky during that     
+For decades, I've been getting by with running a physical PC as my 'main' PC with ad hoc backup.  My strategy was generally to upgrade my hardware completely every 3-5 years
+
+I've been very lucky during that     
 When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to concurrently launch the Current VM while cloning the snapshot, minimizing downtime.
 
 ## Table of Contents
@@ -212,5 +214,5 @@ Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40
 [niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzY0OTY4NTg1LC03Nzc5ODY3NDldfQ==
+eyJoaXN0b3J5IjpbNjI3MTM0ODkyLC03Nzc5ODY3NDldfQ==
 -->
