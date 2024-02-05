@@ -197,8 +197,11 @@ By the end of June 2020 it would look like this.
 | Father      | -   | -   | -   | X   | X    | X    | -    | X    | -    |
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
 ## Change Log
+
 ## Credits
-The [VirtualBox](https://virtualbox.org) team.
+The [VirtualBox.org](https://virtualbox.org) team.
+[niro1987](https://github.com/niro1987)
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4NDkyNDQ0NzJdfQ==
+eyJoaXN0b3J5IjpbLTc3Nzk4Njc0OV19
 -->
