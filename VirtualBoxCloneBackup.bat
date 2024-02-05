@@ -9,7 +9,7 @@ CLS
 
 	CALL :DebugLog "Starting VirtualBox Backup..."
 	FOR %%L IN ("%~dp0.") DO SET "_LOGFILE=%%~fL\log.txt"
-	
+		
 	SET "_VBOXMANAGE=C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
 	SET "_7z=C:\Program Files\7-Zip\7z.exe"
 	SET "_DATE=%_DATETIME:~0,4%.%_DATETIME:~4,2%.%_DATETIME:~6,2%"
@@ -145,6 +145,10 @@ CLS
 		SET "_VMBACKUPDIRTMP=%_VMBACKUPDIR%\Temp"
 		SET "_VMBACKUPPATH=%_VMBACKUPDIR%\%_VMBACKUPNAME%"
 		SET "_VMBACKUPPATHTMP=%_VMBACKUPDIR%\Temp\%_VMBACKUPNAME%"
+		SET "_VMLIVE"=""
+		IF /I "_VM_VMSTATE"=="running" (
+			SET _VMLIVE="--live"
+		)
 
 	:VM_Include
 	:: Check if the VM is explicitly included and skip everything else
@@ -170,7 +174,7 @@ CLS
 		SET "_VMINITSTATE=%_VM_VMSTATE%"
 		IF /I "%_BACKUPMODE%"=="acpipowerbutton" (
 			IF /I "%_VM_VMSTATE%"=="running" (
-				Call :DebugLog "ACPI Shutdown..."
+				CALL :DebugLog "ACPI Shutdown..."
 				CALL :Shutdown
 			)
 		)
@@ -184,26 +188,33 @@ CLS
 	:VM_Create_Snapshot
 	:: Create a snapshot
 		CALL :DebugLog "Creating Backup Snapshot..."
+		:: --live fails if vm not running since 7.0, so check
+		
 		"%_VBOXMANAGE%" ^
 			snapshot %_VM_UUID% ^
-			take "%_VMBACKUPNAME%" ^
-			--live
-
+			take "%_VMBACKUPNAME%" %_VMLIVE%
+		
+		IF NOT %ERRORLEVEL% EQU 0 (
+			SET "_ERROR=1"
+			SET "_ERRORMSG=Snapshot failed, aborting."
+			GOTO :Terminate
+		)
+		
 	:VM_Start
 	:: Start the VM (if it was running or asked to)
 		CALL :GetInfo
-		set "doStart=false"
+		SET "doStart=false"
 		IF /I NOT "%_VM_VMSTATE%"=="running" (
 			IF /I "%_VMINITSTATE%"=="running" (
-				set "doStart=true"
+				SET "doStart=true"
 			)
 		)
 		IF /I "%_BACKUPMODE%"=="start" (
-			set "doStart=true"
+			SET "doStart=true"
 		)
 		IF /I "%doStart%"=="true" (
 			CALL :DebugLog "Starting VM..."
-			echo "%_VBOXMANAGE%" startvm %_VM_UUID%
+			ECHO "%_VBOXMANAGE%" startvm %_VM_UUID%
 			"%_VBOXMANAGE%" startvm %_VM_UUID%
 		)
 
@@ -212,7 +223,7 @@ CLS
 		CALL :GetVMPath
 		IF /I NOT "%_BACKUPDIR%"=="false" (
 			CALL :DebugLog "Cloning..."
-			echo "%_VBOXMANAGE%" clonevm  %_VM_UUID% --snapshot="%_VMBACKUPNAME%" --name="%_VMBACKUPNAME%" --basefolder="%_VMBACKUPDIRTMP%" --options=keepallmacs,keepdisknames,keephwuuids
+			ECHO "%_VBOXMANAGE%" clonevm  %_VM_UUID% --snapshot="%_VMBACKUPNAME%" --name="%_VMBACKUPNAME%" --basefolder="%_VMBACKUPDIRTMP%" --options=keepallmacs,keepdisknames,keephwuuids
 			"%_VBOXMANAGE%" clonevm  %_VM_UUID% --snapshot="%_VMBACKUPNAME%" --name="%_VMBACKUPNAME%" --basefolder="%_VMBACKUPDIRTMP%" --options=keepallmacs,keepdisknames,keephwuuids
 		)
 
@@ -273,7 +284,11 @@ CLS
 	IF %_ERROR% GTR 0 (
 		CALL :DebugLog  "ERROR: %_ERRORMSG%"
 	)
-	EXIT /B
+
+	SET "_ERROR=0"
+	SET "_ERRORMSG="			
+
+	EXIT /B %_ERROR%
 	GOTO :EOF
 
 :DebugLog
@@ -281,7 +296,7 @@ CLS
 	FOR /F "tokens=* delims=" %%A IN ("%~1") DO (
 		ECHO %%~A
         :: Uncomment (remove 'REM') the following line to enable debugging
-		REM ECHO [%_DATETIME%] %%~A >> "%_LOGFILE%" 2>&1
+		ECHO [%_DATETIME%] %%~A >> "%_LOGFILE%" 2>&1
     )
     EXIT /B 0
 
