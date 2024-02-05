@@ -93,7 +93,7 @@ Leaving the `backupdir` parameter out will create a snapshot of the VM without c
 [ --backupmode ]  [ acpipowerbutton | savestate | snapshot | start ]
 ```
 
-In order to succesfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
+In order to successfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
 
 To restore a backup you simply copy/extract the files to your desired location, add (add, not new) VM to OracleBox and restore the latest snapshot. Be aware that you will not be able to restore a backup while the original VM still exists in the same instance of VirtualBox because the drives will have identical UUID's.
 
@@ -198,7 +198,8 @@ By the end of June 2020 it would look like this.
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
 
 ## Compatibility
-Should work with VB 6.1.0 and VB 7.0.
+Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40+ and 7.0.14+.
+ 
 ## Change Log
 | Date | Changes
 |------------|----------------------------------------------------------------
@@ -210,5 +211,5 @@ Should work with VB 6.1.0 and VB 7.0.
 [niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTA1NTAxODUwMSwtNzc3OTg2NzQ5XX0=
+eyJoaXN0b3J5IjpbLTE1NzY0NzE1MDAsLTc3Nzk4Njc0OV19
 -->
