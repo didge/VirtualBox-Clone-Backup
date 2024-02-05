@@ -11,7 +11,8 @@ Additional changes from VBB include:
 * Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to concurrenlty launch the Current VM while cloning the snapshot, minimizing downtime.
+For awhile now, my 'main' PC has been a virtual machine.  
+When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to concurrently launch the Current VM while cloning the snapshot, minimizing downtime.
 
 ## Table of Contents
 - [VirtualBox Clone Backup](#virtualbox-clone-backup)
@@ -37,7 +38,7 @@ When I want to make a backup of a VM, I like to shutdown the VM, then make a bac
 2. Edit and rename *(optional)* **Example Start.bat** according to your needs. See below [Usage](#Usage)
 3. Create a basic task to periodically start **Example Start.bat** *(or whatever you named it)* with [Task Scheduler](https://www.google.com/search?q=Windows+Task+Scheduler&oq=Windows+Task+Scheduler).
 
-Using *Example Start.bat* from Task Scheduler makes editing the parameters a bit more *'user friendly'* and easier to duplicate.
+Using *Example Start.bat* from Task Scheduler makes editing the parameters a bit more user friendly and easier to duplicate.
 
 ## How It Works
 VBCP starts by taking a snapshot of a target vm.  The `backupmode` param lets you choose between taking live snapshots or snapshots from stopped or saved states.
@@ -211,5 +212,5 @@ Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40
 [niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NzY0NzE1MDAsLTc3Nzk4Njc0OV19
+eyJoaXN0b3J5IjpbLTY2Mzk4OTE1MCwtNzc3OTg2NzQ5XX0=
 -->
