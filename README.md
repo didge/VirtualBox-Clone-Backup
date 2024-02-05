@@ -199,11 +199,13 @@ By the end of June 2020 it would look like this.
 ## Change Log
 | Date | Changes
 |------------|----------------------------------------------------------------
-| 2023-03-05 | Initital rel
+| 2023-03-05 | Initial release with support for VB 6.1.x.
+| 2024-02-04 | Update and clean up with support for VB 7.0.14.
+
 ## Credits
 The [VirtualBox.org](https://virtualbox.org) team.
 [niro1987](https://github.com/niro1987)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExNjc1ODE4OTIsLTc3Nzk4Njc0OV19
+eyJoaXN0b3J5IjpbODk3MzQ4Mjk5LC03Nzc5ODY3NDldfQ==
 -->
