@@ -2,13 +2,13 @@
 :: Creates a backup of all VMs in Oracle VirtualBox
 ::
 
-@ECHO OFF
+@ECHO ON
 CLS
 
 :Initialize
 
-	CALL :DebugLog "Starting VirtualBox Backup..."
 	FOR %%L IN ("%~dp0.") DO SET "_LOGFILE=%%~fL\log.txt"
+	CALL :DebugLog "Starting VirtualBox Backup..."
 		
 	SET "_VBOXMANAGE=C:\Program Files\Oracle\VirtualBox\VBoxManage.exe"
 	SET "_7z=C:\Program Files\7-Zip\7z.exe"
