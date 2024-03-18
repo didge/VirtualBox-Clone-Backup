@@ -11,7 +11,14 @@ Additional changes from VBB include:
 * Added `--backupmode start` options which starts the VM immediately after snapshotting.
 
 ## How I Like to Use VBCB
-When I want to make a backup of a VM, I like to shutdown the VM, then make a backup using the `--backupmode start` option.  This results in a very fast snapshot and allows VBCB to concurrenlty launch the Current VM while cloning the snapshot, minimizing downtime.
+VBB is great, but one of the issues that I have with it is that in order to ensure a stable backup of a live VM, the VM had to be taken offline for the duration of the backup.
+
+When I make a backup of a live VM, I first shutdown it down then execute a script that launches VBCB with the `--backupmode start` option.  With this option enabled, VBCB does the following:
+1. Takes a snapshot of the VM.
+2. Starts a clone of the VM from the snapshot.
+3. Restarts the VM while the clone is executing.
+
+Because the snapshot is taken while the VM is offline, it is both fast and stable.  And, because the clone is made from a snapshot, there is nothing preventing the VM from restarting immediately.  Backups of a live VM take only as long to shutdown and restart.  
 
 ## Table of Contents
 - [VirtualBox Clone Backup](#virtualbox-clone-backup)
@@ -37,7 +44,7 @@ When I want to make a backup of a VM, I like to shutdown the VM, then make a bac
 2. Edit and rename *(optional)* **Example Start.bat** according to your needs. See below [Usage](#Usage)
 3. Create a basic task to periodically start **Example Start.bat** *(or whatever you named it)* with [Task Scheduler](https://www.google.com/search?q=Windows+Task+Scheduler&oq=Windows+Task+Scheduler).
 
-Using *Example Start.bat* from Task Scheduler makes editing the parameters a bit more *'user friendly'* and easier to duplicate.
+Using *Example Start.bat* from Task Scheduler makes editing the parameters a bit more user friendly and easier to duplicate.
 
 ## How It Works
 VBCP starts by taking a snapshot of a target vm.  The `backupmode` param lets you choose between taking live snapshots or snapshots from stopped or saved states.
@@ -93,7 +100,7 @@ Leaving the `backupdir` parameter out will create a snapshot of the VM without c
 [ --backupmode ]  [ acpipowerbutton | savestate | snapshot | start ]
 ```
 
-In order to succesfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
+In order to successfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
 
 To restore a backup you simply copy/extract the files to your desired location, add (add, not new) VM to OracleBox and restore the latest snapshot. Be aware that you will not be able to restore a backup while the original VM still exists in the same instance of VirtualBox because the drives will have identical UUID's.
 
@@ -196,12 +203,20 @@ By the end of June 2020 it would look like this.
 | Son         | -   | -   | -   | -   | -    | -    | X    | -    | X    |
 | Father      | -   | -   | -   | X   | X    | X    | -    | X    | -    |
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
+
+## Compatibility
+Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40+ and 7.0.14+.
+ 
 ## Change Log
+| Date | Changes
+|------------|----------------------------------------------------------------
+| 2023-03-05 | Initial release with support for VB 6.1.x.
+| 2024-02-04 | Update and clean up with support for VB 7.0.14.
 
 ## Credits
-The [VirtualBox.org](https://virtualbox.org) team.
-[niro1987](https://github.com/niro1987)
+[VirtualBox.org](https://virtualbox.org) team for obvious reasons.
+[niro1987](https://github.com/niro1987) for kindly developing and making [VirtualBox-Backup](https://github.com/niro1987/VirtualBox-Backup) available.
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc3Nzk4Njc0OV19
+eyJoaXN0b3J5IjpbMjExMDg4MjMyMSwtNzc3OTg2NzQ5XX0=
 -->
