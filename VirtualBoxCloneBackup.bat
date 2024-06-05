@@ -121,6 +121,8 @@ CLS
 		SET "_SUFFIX= %_SUFFIX%"
 	)
 
+	CALL :DebugLog "Virtual Box VMs:"
+
 	FOR /F "tokens=* delims=" %%V IN ('"%_VBOXMANAGE%" list vms') DO CALL :VM_Initialize %%V
 	
 	GOTO :Terminate
