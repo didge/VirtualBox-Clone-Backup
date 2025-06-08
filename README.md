@@ -79,10 +79,10 @@ If you do not pass a parameter it will revert to it's default behavior as docume
 ### Backup Dir
 
 ```text
-[ --backupdir ] { PATH }
+[ --backupdir PATH ]
 ```
 
-Pass this parameter along with a valid path  to set the target folder. A subfolder is automatically created for each VM. Your can use Windows default variables like `%USERPROFILE%` and `%ONEDRIVE%`. The custom variable `%_CURRENTDIR%` will set the target folder to where you save the `.bat` files.
+Pass this parameter along with a valid path to set the target backup directory. A sub-directory is automatically created for each VM. Your can use Windows default variables like `%USERPROFILE%` and `%ONEDRIVE%`. The custom variable `%_CURRENTDIR%` will set the target folder to where you save the `.bat` files.
 
 #### Snapshot Only
 
@@ -97,7 +97,7 @@ Leaving the `backupdir` parameter out will create a snapshot of the VM without c
 ### Backup Mode
 
 ```text
-[ --backupmode ]  [ acpipowerbutton | savestate | snapshot | start ]
+[ --backupmode { acpipowerbutton | savestate | snapshot | start } ]
 ```
 
 In order to successfully create a backup, the VM needs to be in a stable (not changing) state. To reduce downtime, a snapshot is created and the VM is restarted (if it was running in the first place).
@@ -114,8 +114,8 @@ To restore a backup you simply copy/extract the files to your desired location, 
 ### Prefix/Suffix
 
 ```text
-[ --prefix ] { PREFIX }
-[ --suffix ] { SUFFIX }
+[ --prefix PREFIX ]
+[ --suffix SUFFIX ]
 ```
 
 Each backup is saved to a subfolder inside the [target folder](#backup-dir) named after the VM. The backup is named `[prefix ]YYYY.MM.DD-HH24.MM[ suffix]`. Pass one or both parameters to append an additional string to the backup name.
@@ -128,8 +128,8 @@ Each backup is saved to a subfolder inside the [target folder](#backup-dir) name
 ### Include/Exclude
 
 ```text
-[ --include ] { VM-Name }
-[ --exclude ] { VM-Name }
+[ --include VM-Name ]
+[ --exclude VM-Name ]
 ```
 
 Set one of the above parameters to exclude or explicitly include a single VM from backup. Does not accept wildcards and is case sensitive.
@@ -160,7 +160,7 @@ The VM Backup Files can be compressed to a single 7-Zip file to save some disksp
 ### Keep
 
 ```text
-[ --keep ] [ 0 - ~ ]
+[ --keep  { 0 | 1 | 2 | ... | N } ]
 ```
 
 Delete old backups with the same prefix and/or suffix and retaines the last `[x]`. If no [Prefix and/or Suffix](#prefixsuffix) is set, all files and folders in the VM's backup subfolder are validated and possibly removed.
@@ -168,7 +168,7 @@ Delete old backups with the same prefix and/or suffix and retaines the last `[x]
 | Parameter    | Description                               |
 | ------------ | ----------------------------------------- |
 | `--keep 0`   | *(default)* No cleanup. Keep all backups. |
-| `--keep [x]` | Retain the `[x]` latest created backups.  |
+| `--keep N`   | Retain the `N` latest created backups.  |
 
 ### Stack
 
@@ -205,13 +205,14 @@ By the end of June 2020 it would look like this.
 | Grandfather | X   | X   | X   | -   | -    | -    | -    | -    | -    |
 
 ## Compatibility
-Should work with VB 6.1.x and VB 7.0.x.  I'm personally have used it with 6.1.40+ and 7.0.14+.
+Should work with VB 6.1.x and VB 7.0.x.  I'm personally using it with 6.1.40+ and 7.0.14+.
  
 ## Change Log
 | Date | Changes
 |------------|----------------------------------------------------------------
 | 2023-03-05 | Initial release with support for VB 6.1.x.
 | 2024-02-04 | Update and clean up with support for VB 7.0.14.
+| 2025-06-08 | Update README.md.
 
 ## Credits
 [VirtualBox.org](https://virtualbox.org) team for obvious reasons.
